@@ -1,6 +1,12 @@
 ## Usage
 
-Install Node. Then run:
+Install Node (preferably v5 or higher). Install dependencies:
+
+```
+$ npm install
+```
+
+Then run:
 
 ```
 $ gulp
