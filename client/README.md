@@ -1,4 +1,8 @@
-## Usage
+## Client Setup
+
+```
+$ cd client
+```
 
 Install Node (preferably v5 or higher). Install dependencies:
 
