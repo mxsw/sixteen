@@ -1,0 +1,31 @@
+{
+  "name": "Spitfire",
+  "version": "0.1.0",
+  "description": "Real-time lyrics assistant",
+  "main": "src/js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "process-data": "node data-processing/parse-csv.js && node data-processing/intersect.js && node data-processing/best-matches.js"
+  },
+  "private": true,
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "brfs": "^1.4.3",
+    "browserify": "^13.0.0",
+    "csvtojson": "^0.5.1",
+    "gulp": "^3.9.0",
+    "gulp-less": "^3.0.5",
+    "gulp-plumber": "^1.0.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
+    "lodash.assign": "^4.0.1",
+    "lodash.sortbyall": "^3.2.1",
+    "progress": "^1.1.8",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "lodash": "^4.1.0"
+  }
+}
