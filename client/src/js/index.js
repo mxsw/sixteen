@@ -126,7 +126,9 @@ var process = () => {
         })
         .catch(function(err) {
             console.error(err);
-            setTimeout(process, 0);
+            setTimeout(function(code) {
+                process(code);
+            }, 0);
         });
 };
 
@@ -138,7 +140,7 @@ module.exports = function() {
     document.addEventListener('keydown', function(e) {
         if (e.keyCode == 13) { // enter
             document.querySelector(".sk-rotating-plane").style.display = 'block';
-            process();
+            process(code);
         }
     });
 
