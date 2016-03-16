@@ -55,7 +55,7 @@ var initPlaylist = function(userID) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name: "Pomodoro playlist" + Math.floor(Math.random()*10),
+                name: "Pomodoro playlist" + Math.floor(Math.random()*1000),
                 public: true,
             })
         }, function(err, _, body) {

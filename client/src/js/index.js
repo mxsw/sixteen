@@ -31,7 +31,7 @@ var tracks = function(songs) {
 
 var doAlgorithm = (tracks, minutes) => {
     var shuffled = lodash.shuffle(tracks).slice(0, 400);
-    var obj = algo.closestSum(shuffled.map(s => Math.floor(s.duration)), minutes*60);
+    var obj = algo.closestSum(shuffled.map(s => Math.round(s.duration)), minutes*60);
 
     if (!obj.possible) {
         return {matches: null, delta: null, possible: obj.possible};
