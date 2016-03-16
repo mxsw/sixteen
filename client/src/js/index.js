@@ -49,6 +49,7 @@ var doAlgorithm = (tracks, seconds) => {
 
 var start = (seconds) => {
     var extras = null;
+    var message = "";
 
     spotify.playlists()
         .then(trackURLs)
@@ -83,6 +84,13 @@ var start = (seconds) => {
                 return Promise.reject("Not possible with margin and delta");
             }
             obj.matches.forEach(m => console.log(m.name, m.duration))
+
+            if (obj.delta > 0) {
+                message = "We found a playlist that's" + obj.delta + "seconds longer";
+            } else if (obj.delta < 0) {
+                message = "We found a playlist that's" + (-obj.delta) + "seconds shorter";
+            }
+
             return obj.matches;
         })
         .then(function(matches) {
@@ -92,14 +100,35 @@ var start = (seconds) => {
             console.log(track_ids);
             return spotify.createPlaylist(track_ids);
         })
-        .then(function(uri) {
-            window.location = "http://localhost:8080/playlist?uri="+encodeURIComponent(uri);
+        .then(function(uri, message) {
+            window.location = "http://localhost:8080/playlist?uri="+encodeURIComponent(uri)+"&message="+message;
         })
         .catch((err) => {
             console.error(err);
+            setTimeout(function() {
+                start(seconds)
+            }, 0);
         });
     };
 
+var process = () => {
+    var m = Number(document.querySelector('input[name=minutes]').value);
+    var s = Number(document.querySelector('input[name=seconds]').value);
+    var total = m*60 + s;
+    console.log(total);
+
+    spotify.accessToken(code)
+        .then(function() {
+            return spotify.refreshToken();
+        })
+        .then(function() {
+            return start(total);
+        })
+        .catch(function(err) {
+            console.error(err);
+            setTimeout(process, 0);
+        });
+};
 
 module.exports = function() {
     var qs = querystring.parse(window.location.search.substr(1, window.location.search.length));
@@ -107,22 +136,9 @@ module.exports = function() {
     console.log(code);
 
     document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 13) {
-            var m = Number(document.querySelector('input[name=minutes]').value);
-            var s = Number(document.querySelector('input[name=seconds]').value);
-            var total = m*60 + s;
-            console.log(total);
-
-            spotify.accessToken(code)
-                .then(function() {
-                    return spotify.refreshToken();
-                })
-                .then(function() {
-                    return start(total);
-                })
-                .catch(function(err) {
-                    console.error(err);
-                });
+        if (e.keyCode == 13) { // enter
+            document.querySelector(".sk-rotating-plane").style.display = 'block';
+            process();
         }
     });
 
