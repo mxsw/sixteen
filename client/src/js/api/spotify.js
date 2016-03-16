@@ -45,16 +45,19 @@ var userID = function() {
     });
 };
 
-var initPlaylist = function() {
+var initPlaylist = function(userID) {
     return new Promise(function(res, rej) {
         request({
             url: "https://api.spotify.com/v1/users/"+userID+"/playlists",
             method: "POST",
             headers: {
-                Authorization: "Bearer " + config.spotify.accessToken
+                Authorization: "Bearer " + config.spotify.accessToken,
+                "Content-Type": "application/json",
             },
-            qs: {
-            }
+            body: JSON.stringify({
+                name: "Pomodoro playlist" + Math.floor(Math.random()*10),
+                public: true,
+            })
         }, function(err, _, body) {
             if (err != null) {
                 console.error(err);
@@ -65,11 +68,11 @@ var initPlaylist = function() {
     });
 };
 
-var addToPlaylist = function(playlist_id, track_ids) {
+var addToPlaylist = function(userID, playlist_id, track_ids) {
 	var trackStr = track_ids.map(s => "spotify:track:"+s).join(',');
     return new Promise(function(res, rej) {
         request({
-            url: "https://api.spotify.com/v1/users/"+userID+"/playlists/"+playlist_id"/tracks",
+            url: "https://api.spotify.com/v1/users/"+userID+"/playlists/"+playlist_id+"/tracks",
             method: "POST",
             headers: {
                 Authorization: "Bearer " + config.spotify.accessToken
@@ -88,8 +91,19 @@ var addToPlaylist = function(playlist_id, track_ids) {
 };
 
 var createPlaylist = function(track_ids) {
-	var playlistID = initPlaylist();
-    addToPlaylist(playlistID, track_ids);
+    var userid = null;
+
+    userID()
+        .then(function(uid) {
+            userid = uid;
+            return initPlaylist(uid);
+        })
+        .then(function(pid) {
+            return addToPlaylist(userid, pid, track_ids);
+        })
+        .catch(function(err) {
+            console.error(err);
+        });
 };
 
 var trackList = function(url) {
@@ -135,24 +149,26 @@ var accessToken = function(code) {
     });
 };
 
-var refreshToken = function(cb) {
-    request({
-        url: "https://accounts.spotify.com/api/token",
-        method: "POST",
-        form: {
-            refresh_token: config.spotify.refreshToken,
-            grant_type: "refresh_token",
-            client_id: config.spotify.clientID,
-            client_secret: config.spotify.clientSecret
-        },
-    }, function(err, _, body) {
-        if (err != null) {
-            console.error(err);
-            return;
-        }
-        var b = JSON.parse(body);
-        config.spotify.accessToken = b['access_token'];
-        cb();
+var refreshToken = function() {
+    return new Promise(function(res, rej) {
+        request({
+            url: "https://accounts.spotify.com/api/token",
+            method: "POST",
+            form: {
+                refresh_token: config.spotify.refreshToken,
+                grant_type: "refresh_token",
+                client_id: config.spotify.clientID,
+                client_secret: config.spotify.clientSecret
+            },
+        }, function(err, _, body) {
+            if (err != null) {
+                console.error(err);
+                rej(err);
+            }
+            var b = JSON.parse(body);
+            config.spotify.accessToken = b['access_token'];
+            res();
+        });
     });
 };
 
@@ -161,4 +177,7 @@ module.exports = {
     playlists: playlists,
     trackList: trackList,
     accessToken: accessToken,
+    addToPlaylist: addToPlaylist,
+    createPlaylist: createPlaylist,
+    initPlaylist: initPlaylist,
 };

@@ -60,6 +60,13 @@ var start = () => {
             obj.matches.forEach(m => console.log(m.name, m.duration))
             return obj.matches;
         })
+        .then(function(matches) {
+            return matches.map(m => m.id);
+        })
+        .then(function(track_ids) {
+            console.log(track_ids);
+            return spotify.createPlaylist(track_ids);
+        })
         .catch((err) => {
             console.error(err);
         });
@@ -70,9 +77,13 @@ module.exports = function() {
     var qs = querystring.parse(window.location.search.substr(1, window.location.search.length));
     var code = qs.code;
     console.log(code);
+
     spotify.accessToken(code)
         .then(function() {
-            spotify.refreshToken(start);
+            return spotify.refreshToken();
         })
-        .then(start);
+        .then(start)
+        .catch(function(err) {
+            console.error(err);
+        });
 };
