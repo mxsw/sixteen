@@ -1,4 +1,3 @@
-console.log("works");
 
 var margin = 5;
 
@@ -32,7 +31,7 @@ function closestSum(set, names, sum){
 			var bool2 = false;
 			
 			// if it can be done without the current number
-			if(subset[i][j-1]){
+			if(a[j-1]){
 				bool1 = true;
 			}
 			
@@ -56,17 +55,20 @@ function closestSum(set, names, sum){
 			}
 			else if (bool2){
 				a.push(subset[i - set[j-1]][j-1] + 1);
-				b.push(lists[i - set[j-1]][j-1]); // deep copy
-				b[j].push(j); // and append this index
+				b.push(JSON.parse(JSON.stringify(lists[i - set[j-1]][j-1]))); // deep copy
+				b[j].push(j-1); // and append this index
 			} else {
 				a.push(0);
 				b.push([]);
 			}
-			
-			subset.push(a);
-			lists.push(b);
 		}
-     }
+		
+		subset.push(a);
+		lists.push(b);
+		//console.log(b);
+		//console.log();
+		//console.log(lists);
+     }//console.log(lists);
 	
 	 var delta = margin + 1;
 	 
@@ -92,4 +94,8 @@ var names = ["a", "b", "c", "d", "e", "f"];
 
 var out = closestSum(set, names, sum);
 console.log(out.possible);
+console.log(out.delta);
+for(i = 0; i < out.list.length; i ++){
+	console.log(names[out.list[i]]);
+}
 	
