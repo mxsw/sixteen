@@ -41,7 +41,7 @@ var trackList = function(url) {
     });
 };
 
-var refreshToken = function() {
+var refreshToken = function(cb) {
     request({
         url: "https://accounts.spotify.com/api/token",
         method: "POST",
@@ -58,6 +58,7 @@ var refreshToken = function() {
         }
         var b = JSON.parse(body);
         config.spotify.accessToken = b['access_token'];
+        cb();
     });
 };
 
