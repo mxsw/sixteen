@@ -1,19 +1,22 @@
-* client
-* server
+# Crunch Time
 
-## API credentials
+Music timed to perfection.
 
-**Musimap**
+![](http://i.imgur.com/V7cFabp.gif)
 
-sixteen
+## Features
 
-Description :
-Pomodoro timer with exact song times
+- Quantone API + Spotify API
+- Written in ES6 and Node.js with `Promises`
+- HTML/Less/Browserify
 
-Client ID:`1de0a12cb43bb040`
 
-Client Secret: `4d1f72fb77740bcf0b6196c266ea6b33`
+## Screen Shots
 
-Grant Types: client_credentials
+**Login**
+![](http://i.imgur.com/aWwIjjD.png)
 
-Endpoints: `http://localhost:8000`
+**Make a perfectly timed playlist**
+![](http://i.imgur.com/O2daW5B.png)
+
+![](http://i.imgur.com/zWSARrX.png)
