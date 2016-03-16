@@ -111,7 +111,7 @@ var start = (seconds) => {
         });
     };
 
-var process = () => {
+var process = (code) => {
     var m = Number(document.querySelector('input[name=minutes]').value);
     var s = Number(document.querySelector('input[name=seconds]').value);
     var total = m*60 + s;
