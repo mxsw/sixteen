@@ -1,7 +1,7 @@
 
 var margin = 5;
 
-function closestSum(set, names, sum){
+function closestSum(set, sum){
 	var lists = [];
 	var subset = [];
 	
@@ -92,7 +92,7 @@ var sum = 9;
 var set = [3,34,4,12,5,2];
 var names = ["a", "b", "c", "d", "e", "f"];
 
-var out = closestSum(set, names, sum);
+var out = closestSum(set, sum);
 console.log(out.possible);
 console.log(out.delta);
 for(i = 0; i < out.list.length; i ++){
