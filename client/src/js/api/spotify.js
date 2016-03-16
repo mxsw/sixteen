@@ -110,6 +110,31 @@ var trackList = function(url) {
     });
 };
 
+var accessToken = function(code) {
+    return new Promise(function(res, rej) {
+        request({
+            url: "https://accounts.spotify.com/api/token",
+            method: "POST",
+            form: {
+                grant_type: "authorization_code",
+                code: code,
+                redirect_uri: "http://localhost:8080",
+                client_id: config.spotify.clientID,
+                client_secret: config.spotify.clientSecret
+            },
+        }, function(err, _, body) {
+            if (err != null) {
+                console.error(err);
+                rej(err)
+            }
+            b = JSON.parse(body);
+            config.spotify.accessToken = b.access_token;
+            config.spotify.refreshToken = b.refresh_token;
+            res();
+        });
+    });
+};
+
 var refreshToken = function(cb) {
     request({
         url: "https://accounts.spotify.com/api/token",
@@ -135,4 +160,5 @@ module.exports = {
     refreshToken: refreshToken,
     playlists: playlists,
     trackList: trackList,
+    accessToken: accessToken,
 };

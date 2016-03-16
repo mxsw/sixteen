@@ -3,6 +3,7 @@ var request = require('request');
 var config = require('./config');
 var lodash = require('lodash');
 var algo = require('./closest');
+var querystring = require('querystring');
 
 var songs = function(urls) {
     promises = urls.map(function(url) {
@@ -66,6 +67,12 @@ var start = () => {
 
 
 module.exports = function() {
-    console.log(window.location);
-    spotify.refreshToken(start);
+    var qs = querystring.parse(window.location.search.substr(1, window.location.search.length));
+    var code = qs.code;
+    console.log(code);
+    spotify.accessToken(code)
+        .then(function() {
+            spotify.refreshToken(start);
+        })
+        .then(start);
 };
