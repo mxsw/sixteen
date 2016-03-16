@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nishanth Shanmugham <nishanth.gerrard@gmail.com> (http://nishanths.github.io)",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.6.1",
+    "request": "^2.69.0",
+    "unirest": "^0.4.2"
+  }
+}
