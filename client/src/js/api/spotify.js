@@ -63,7 +63,7 @@ var initPlaylist = function(userID) {
                 console.error(err);
                 rej(err);
             }
-            res(JSON.parse(body).id);
+            res(JSON.parse(body));
         });
     });
 };
@@ -92,18 +92,27 @@ var addToPlaylist = function(userID, playlist_id, track_ids) {
 
 var createPlaylist = function(track_ids) {
     var userid = null;
+    var uri = null;
 
-    userID()
-        .then(function(uid) {
-            userid = uid;
-            return initPlaylist(uid);
-        })
-        .then(function(pid) {
-            return addToPlaylist(userid, pid, track_ids);
-        })
-        .catch(function(err) {
-            console.error(err);
-        });
+    return new Promise(function(res, rej) {
+        userID()
+            .then(function(uid) {
+                userid = uid;
+                return initPlaylist(uid);
+            })
+            .then(function(p) {
+                uri = p.uri;
+                console.log(uri);
+                return addToPlaylist(userid, p.id, track_ids);
+            })
+            .then(function() {
+                res(uri)
+            })
+            .catch(function(err) {
+                rej(err);
+            });
+    });
+
 };
 
 var trackList = function(url) {

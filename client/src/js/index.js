@@ -67,6 +67,9 @@ var start = () => {
             console.log(track_ids);
             return spotify.createPlaylist(track_ids);
         })
+        .then(function(uri) {
+            window.location = "http://localhost:8080/playlist?uri="+encodeURIComponent(uri);
+        })
         .catch((err) => {
             console.error(err);
         });
@@ -78,12 +81,17 @@ module.exports = function() {
     var code = qs.code;
     console.log(code);
 
-    spotify.accessToken(code)
-        .then(function() {
-            return spotify.refreshToken();
-        })
-        .then(start)
-        .catch(function(err) {
-            console.error(err);
-        });
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 13) {
+            spotify.accessToken(code)
+                .then(function() {
+                    return spotify.refreshToken();
+                })
+                .then(start)
+                .catch(function(err) {
+                    console.error(err);
+                });
+        }
+    });
+
 };
