@@ -29,9 +29,9 @@ var tracks = function(songs) {
     })
 };
 
-var doAlgorithm = (tracks, minutes) => {
+var doAlgorithm = (tracks, seconds) => {
     var shuffled = lodash.shuffle(tracks).slice(0, 400);
-    var obj = algo.closestSum(shuffled.map(s => Math.round(s.duration)), minutes*60);
+    var obj = algo.closestSum(shuffled.map(s => Math.round(s.duration)), seconds);
 
     if (!obj.possible) {
         return {matches: null, delta: null, possible: obj.possible};
@@ -47,12 +47,12 @@ var doAlgorithm = (tracks, minutes) => {
     }
 };
 
-var start = () => {
+var start = (seconds) => {
     spotify.playlists()
         .then(trackURLs)
         .then(songs)
         .then(tracks)
-        .then(tracks => doAlgorithm(tracks, 2))
+        .then(tracks => doAlgorithm(tracks, seconds))
         .then(function(obj) {
             if (!obj.possible) {
                 return Promise.reject("Not possible with margin and delta");
@@ -83,11 +83,17 @@ module.exports = function() {
 
     document.addEventListener('keydown', function(e) {
         if (e.keyCode == 13) {
+            var m = Number(document.querySelector('input[name=minutes]'));
+            var s = Number(document.querySelector('input[name=seconds]'));
+            var total = m*60 + s;
+
             spotify.accessToken(code)
                 .then(function() {
                     return spotify.refreshToken();
                 })
-                .then(start)
+                .then(function() {
+                    return start(seconds);
+                })
                 .catch(function(err) {
                     console.error(err);
                 });
