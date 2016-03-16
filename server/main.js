@@ -21,12 +21,14 @@ var tracks = function(songs) {
     songs.forEach(function(obj) {
         [].push.apply(tracks, obj.items.map(s => s.track));
     });
-    return tracks;
+    return tracks.map(t => {
+	    return {id: t.id, duration: t.duration_ms/1000, name:t.name}
+    });
 };
 
 var doAlgorithm = (tracks, minutes) => {
     var shuffled = lodash.shuffle(tracks).slice(0, 400);
-    var obj = algo.closestSum(shuffled.map(s => Math.floor(s.duration_ms/1000)), minutes*60);
+    var obj = algo.closestSum(shuffled.map(s => Math.floor(s.duration)), minutes*60);
 
     if (!obj.possible) {
         return {matches: null, delta: null, possible: obj.possible};
@@ -52,7 +54,7 @@ var main = () => {
             if (!obj.possible) {
                 return Promise.reject("Not possible with margin and delta");
             }
-            obj.matches.forEach(m => console.log(m.name, m.duration_ms/1000))
+            obj.matches.forEach(m => console.log(m.name, m.duration))
             return obj.matches;
         })
         .catch((err) => {
