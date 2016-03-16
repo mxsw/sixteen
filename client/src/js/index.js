@@ -48,11 +48,36 @@ var doAlgorithm = (tracks, seconds) => {
 };
 
 var start = (seconds) => {
+    var extras = null;
+
     spotify.playlists()
         .then(trackURLs)
         .then(songs)
         .then(tracks)
-        .then(tracks => doAlgorithm(tracks, seconds))
+        .then(function(tracks) {
+            var id = tracks.length > 0 && tracks[0].id;
+            if (id != null) {
+                request({
+                    url: "http://localhost:9001/",
+                    method: "GET",
+                    qs: {
+                        id: id
+                    },
+                }), function(err, _, body) {
+                    if (err != null) {
+                        return;
+                    }
+                    extras = JSON.parse(body);
+                };
+            }
+            return tracks;
+        })
+        .then(tracks => {
+            if (extras != null) {
+                tracks.concat(extras);
+            }
+            return doAlgorithm(tracks, seconds)
+        })
         .then(function(obj) {
             if (!obj.possible) {
                 return Promise.reject("Not possible with margin and delta");

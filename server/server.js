@@ -6,6 +6,7 @@ var Router = require('router')
 
 var router = Router();
 
+// GET :9001/?id=0N3W5peJUQtI4eyR6GJT5O
 router.get('/', function(req, res) {
     var query = url.parse(req.url, true).query;
     var id = query.id;
