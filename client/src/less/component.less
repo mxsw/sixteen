@@ -1,3 +1,5 @@
+@input-color: rgba(255,255,255,0.4);
+
 @font-face {
 	font-family: 'nlicons';
 	src:url('../fonts/nlicons/nlicons.eot');
@@ -61,9 +63,9 @@
 .nl-form select  {
 	line-height: inherit;
 	display: inline-block;
-	color: #b14943;
+	color: @input-color;
 	cursor: pointer;
-	border-bottom: 1px dashed #b14943;
+	border-bottom: 1px dashed @input-color;
 }
 
 /* drop-down list / text element */
@@ -189,7 +191,7 @@ input:focus::-moz-placeholder {
 	color: rgba(255,255,255,0.2);
 }
 
-input:-ms-input-placeholder {  
+input:-ms-input-placeholder {
 	color: rgba(255,255,255,0.8);
 }
 
