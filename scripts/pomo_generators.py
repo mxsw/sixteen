@@ -8,7 +8,7 @@ sumg
 name lenght
 
 '''
-num_cases = 1000
+num_cases = 300
 
 # def name_gen():
 #     ans = 'a'
@@ -27,7 +27,7 @@ def name_gen():
 
 def number_gen():
     while True:
-        thing = math.floor(random.normalvariate(3.5,1.5) * 60.0)
+        thing = math.floor(random.normalvariate(3.5,0.5) * 60.0)
         yield thing
 
 
@@ -36,6 +36,7 @@ if __name__=='__main__':
     next_name = name_gen()
     next_number = number_gen()
     num = 0
+    print("%d" % 1500)
     while num != num_cases:
         thing = next(next_number)
         if(thing > 0):
