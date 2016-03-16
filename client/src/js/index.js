@@ -83,16 +83,17 @@ module.exports = function() {
 
     document.addEventListener('keydown', function(e) {
         if (e.keyCode == 13) {
-            var m = Number(document.querySelector('input[name=minutes]'));
-            var s = Number(document.querySelector('input[name=seconds]'));
+            var m = Number(document.querySelector('input[name=minutes]').value);
+            var s = Number(document.querySelector('input[name=seconds]').value);
             var total = m*60 + s;
+            console.log(total);
 
             spotify.accessToken(code)
                 .then(function() {
                     return spotify.refreshToken();
                 })
                 .then(function() {
-                    return start(seconds);
+                    return start(total);
                 })
                 .catch(function(err) {
                     console.error(err);

@@ -9,8 +9,10 @@
   "author": "Nishanth Shanmugham <nishanth.gerrard@gmail.com> (http://nishanths.github.io)",
   "license": "ISC",
   "dependencies": {
+    "connect": "^3.4.1",
     "lodash": "^4.6.1",
     "request": "^2.69.0",
+    "router": "^1.1.4",
     "unirest": "^0.4.2"
   }
 }
