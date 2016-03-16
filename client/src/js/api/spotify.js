@@ -1,7 +1,7 @@
 var request = require('request');
 var config = require('../config.js');
 
-var playlists = function(success) {
+var playlists = function() {
     return new Promise(function(res, rej) {
         request({
             url: "https://api.spotify.com/v1/me/playlists",
@@ -21,6 +21,75 @@ var playlists = function(success) {
             res(JSON.parse(body).items);
         });
     });
+};
+
+var userID = function() {
+    return new Promise(function(res, rej) {
+        request({
+            url: "https://api.spotify.com/v1/me",
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + config.spotify.accessToken
+            },
+            qs: {
+                limit: 50,
+                offset: 0,
+            }
+        }, function(err, _, body) {
+            if (err != null) {
+                console.error(err);
+                rej(err);
+            }
+            res(JSON.parse(body).id);
+        });
+    });
+};
+
+var initPlaylist = function() {
+    return new Promise(function(res, rej) {
+        request({
+            url: "https://api.spotify.com/v1/users/"+userID+"/playlists",
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + config.spotify.accessToken
+            },
+            qs: {
+            }
+        }, function(err, _, body) {
+            if (err != null) {
+                console.error(err);
+                rej(err);
+            }
+            res(JSON.parse(body).id);
+        });
+    });
+};
+
+var addToPlaylist = function(playlist_id, track_ids) {
+	var trackStr = track_ids.map(s => "spotify:track:"+s).join(',');
+    return new Promise(function(res, rej) {
+        request({
+            url: "https://api.spotify.com/v1/users/"+userID+"/playlists/"+playlist_id"/tracks",
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + config.spotify.accessToken
+            },
+            qs: {
+            	uris:trackStr
+            }
+        }, function(err, _, body) {
+            if (err != null) {
+                console.error(err);
+                rej(err);
+            }
+            res();
+        });
+    });
+};
+
+var createPlaylist = function(track_ids) {
+	var playlistID = initPlaylist();
+    addToPlaylist(playlistID, track_ids);
 };
 
 var trackList = function(url) {
