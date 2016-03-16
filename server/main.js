@@ -1,45 +1,35 @@
-var api = require('./api/spotify/playlist');
+var spotify = require('./api/spotify');
 var config = require('./config');
 
-var trackURLs = function() {
-    var p = new Promise(function(resolve, reject) {
-        api.playlists(function(playlists) {
-            var hrefs = playlists.map(function(p) {
-                return p.tracks.href;
-            });
-
-            resolve(hrefs);
-        });
-    });
-    
-    return p;
-};
-
-var songIDs = function(urls) {
-    console.log(urls)
+var songs = function(urls) {
     promises = urls.map(function(url) {
-        return api.getTrackList(url);
+        return spotify.trackList(url);
     });
-
     return Promise.all(promises);
 };
 
-trackURLs()
-    .then(songIDs)
-    .then(function(arr) {
-        var songs = [];
-        arr.forEach(function(o) {
-            o.items.forEach(function(s) {
-                songs.push(s);
-            })
-        });
-
-        console.log(songs[0])
-
-        var ids = songs.map(function(s) {
-            return s.track.id;
-        });
-
-        console.log(ids);
+var trackURLs = function(playlists) {
+    return playlists.map(function(p) {
+        return p.tracks.href;
     });
+};
 
+var tracks = function(songs) {
+    var tracks = [];
+    songs.forEach(function(obj) {
+        [].push.apply(tracks, obj.items.map(s => s.track));
+    });
+    return tracks;
+};
+
+spotify.refreshToken();
+spotify.playlists()
+    .then(trackURLs)
+    .then(songs)
+    .then(tracks)
+    .then((tracks) => {
+        console.log(tracks);
+    })
+    .catch((err) => {
+        console.error(err);
+    });
